@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:themoviedb/screens/components/genres_card.dart';
+import 'package:themoviedb/screens/home/components/genres_card.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
 
 class Genres extends StatelessWidget {
   const Genres({

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:themoviedb/constants.dart';
-import 'package:themoviedb/screens/components/categories.dart';
-import 'package:themoviedb/screens/components/movie_carousel.dart';
-
-import 'components/genres.dart';
+import 'package:themoviedb/screens/home/components/body.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -27,14 +24,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Categories(),
-          Genres(),
-          SizedBox(height: kDefaultPadding,),
-          MovieCarousel(),
-        ],
-      ),
+      body: Body(),
     );
   }
 }
