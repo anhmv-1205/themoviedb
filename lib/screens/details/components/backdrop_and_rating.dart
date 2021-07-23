@@ -1,37 +1,54 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:themoviedb/models/movie.dart';
+import 'package:provider/provider.dart';
+import 'package:themoviedb/data/network/constants/end_points.dart';
+import 'package:themoviedb/stores/movie/movie_store.dart';
 
 import '../../../constants.dart';
 
 class BackdropAndRating extends StatelessWidget {
-  const BackdropAndRating({
-    Key? key,
-    required this.size,
-    required this.movie,
-  }) : super(key: key);
+  const BackdropAndRating({Key? key, required this.size}) : super(key: key);
 
   final Size size;
-  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
+    MovieStore movieStore = Provider.of<MovieStore>(context, listen: false);
     return Container(
       width: double.infinity,
       height: size.height * 0.4,
       child: Stack(
         children: [
-          Container(
-            height: size.height * 0.4 - 50,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(movie.backdrop),
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(50),
-              ),
-            ),
+          Observer(
+            builder: (_) => movieStore.movieDetail?.backdropPath != null
+                ? SizedBox(
+                    height: size.height * 0.4 - 50,
+                    child: Observer(
+                      builder: (_) => CachedNetworkImage(
+                        imageUrl: Endpoint.baseImageW300 +
+                            (movieStore.movieDetail?.backdropPath ?? ""),
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(50),
+                            ),
+                            boxShadow: [kDefaultShadow],
+                          ),
+                        ),
+                        placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
+                    ),
+                  )
+                : SizedBox(height: size.height * 0.4 - 50),
           ),
           Positioned(
             bottom: 0,
@@ -67,25 +84,29 @@ class BackdropAndRating extends StatelessWidget {
                           SizedBox(
                             height: kDefaultPadding / 4,
                           ),
-                          RichText(
-                            text: TextSpan(
-                              style: TextStyle(color: Colors.black),
-                              children: [
-                                TextSpan(
-                                  text: '${movie.rating}',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                          Observer(
+                            builder: (_) => RichText(
+                              text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        '${movieStore.movieDetail?.voteAverage}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                TextSpan(text: '/10\n'),
-                                TextSpan(
-                                  text: '150,212',
-                                  style: TextStyle(color: kTextLightColor),
-                                ),
-                              ],
+                                  TextSpan(text: '/10\n'),
+                                  TextSpan(
+                                    text:
+                                        '${movieStore.movieDetail?.voteCount}',
+                                    style: TextStyle(color: kTextLightColor),
+                                  ),
+                                ],
+                              ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -116,12 +137,14 @@ class BackdropAndRating extends StatelessWidget {
                               borderRadius: BorderRadius.circular(2),
                             ),
                             child: Center(
-                              child: Text(
-                                '${movie.metascoreRating}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                              child: Observer(
+                                builder: (_) => Text(
+                                  '${movieStore.movieDetail?.voteCount}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ),
