@@ -2,9 +2,8 @@
 
 This is a sample project to learn flutter
 
-![home screen](https://github.com/anhmv-1205/themoviedb/blob/master/images/home.png?raw=true)
 
-![detail screen](https://github.com/anhmv-1205/themoviedb/blob/master/images/detail.png?raw=true)
+<img src="https://github.com/anhmv-1205/themoviedb/blob/master/images/home.png" width="300" height="600">         <img src="https://github.com/anhmv-1205/themoviedb/blob/master/images/detail.png"  width="300" height="600">
 
 ## Get Started
 
