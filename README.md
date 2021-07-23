@@ -1,16 +1,19 @@
-# themoviedb
+# The movie db
 
-A new Flutter project.
+This is a sample project to learn flutter
 
-## Getting Started
+![home screen](https://github.com/anhmv-1205/themoviedb/blob/master/images/home.png?raw=true)
 
-This project is a starting point for a Flutter application.
+![detail screen](https://github.com/anhmv-1205/themoviedb/blob/master/images/detail.png?raw=true)
 
-A few resources to get you started if this is your first Flutter project:
+## Get Started
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+* Clone this repo.
+* Open terminal and typing: ```flutter pub get ```
+* Start a device or emulator
+* Run with ```flutter run```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Todo
+- Save your favorite movie in the local storage device.
+- Apply clean architecture.
+

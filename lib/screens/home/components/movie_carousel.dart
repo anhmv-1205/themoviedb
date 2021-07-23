@@ -1,9 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:themoviedb/constants.dart';
-import 'package:themoviedb/models/movie.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
+import 'package:themoviedb/constants.dart';
+import 'package:themoviedb/models/movie.dart';
 import 'package:themoviedb/screens/home/components/movie_card.dart';
+import 'package:themoviedb/stores/movie/movie_store.dart';
 
 class MovieCarousel extends StatefulWidget {
   @override
@@ -13,6 +16,7 @@ class MovieCarousel extends StatefulWidget {
 class _MovieCarouselState extends State<MovieCarousel> {
   late PageController _pageController;
   int initialPage = 1;
+  late MovieStore _movieStore;
 
   @override
   void initState() {
@@ -20,7 +24,15 @@ class _MovieCarouselState extends State<MovieCarousel> {
       viewportFraction: 0.8,
       initialPage: initialPage,
     );
+
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // initializing stores
+    _movieStore = Provider.of<MovieStore>(context, listen: false);
   }
 
   @override
@@ -33,45 +45,42 @@ class _MovieCarouselState extends State<MovieCarousel> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 2),
-      child: AspectRatio(
-        aspectRatio: 0.8,
-        child: PageView.builder(
-            onPageChanged: (index) => {
-                  setState(
-                    () {
-                      initialPage = index;
-                    },
-                  )
-                },
-            physics: ClampingScrollPhysics(),
-            controller: _pageController,
-            scrollDirection: Axis.horizontal,
-            itemCount: movies.length,
-            itemBuilder: (context, index) {
-              return buildMovieSlider(index);
-            }),
-      ),
+      child: Observer(builder: (_) {
+        initialPage = 0;
+        if (_pageController.hasClients) {
+          _pageController.jumpTo(initialPage.toDouble());
+        }
+        return PageView.builder(
+          onPageChanged: (index) => {
+            initialPage = index,
+          },
+          physics: ClampingScrollPhysics(),
+          controller: _pageController,
+          scrollDirection: Axis.horizontal,
+          itemCount: _movieStore.movieList?.length ?? 0,
+          itemBuilder: (context, index) {
+            return buildMovieSlider(_movieStore.movieList![index], index);
+          },
+        );
+      }),
     );
   }
 
-  Widget buildMovieSlider(int index) {
+  Widget buildMovieSlider(Movie movie, int index) {
     return AnimatedBuilder(
       animation: _pageController,
       builder: (context, child) {
         double value = 0;
-        if (_pageController.position.haveDimensions) {
-          value = index - _pageController.page!;
-          print('index $index}');
-          print('value1 $value}');
+        if (_pageController.position.haveDimensions == true) {
+          value = index - (_pageController.page ?? 0);
           value = (value * 0.038).clamp(-1, 1);
-          print('value2 $value}');
         }
         return AnimatedOpacity(
           duration: Duration(microseconds: 350),
           opacity: initialPage == index ? 1 : 0.4,
           child: Transform.rotate(
             angle: math.pi * value,
-            child: MovieCard(movie: movies[index]),
+            child: MovieCard(movie: movie),
           ),
         );
       },

@@ -1,135 +1,160 @@
-// Our movie model
+import 'package:themoviedb/models/credits.dart';
+import 'package:themoviedb/models/production_companies.dart';
+import 'package:themoviedb/models/production_countries.dart';
+import 'package:themoviedb/models/spoken_languages.dart';
+import 'package:themoviedb/models/genres.dart';
+
+import 'belongs_to_collection.dart';
+
 class Movie {
-  final int id, year, numOfRatings, criticsReview, metascoreRating;
-  final double rating;
-  final List<String> genra;
-  final String plot, title, poster, backdrop;
-  final List<Map> cast;
+  bool? adult;
+  String? backdropPath;
+  BelongsToCollection? belongsToCollection;
+  int? budget;
+  List<Genres?>? genres;
+  String? homepage;
+  int? id;
+  String? imdbId;
+  String? originalLanguage;
+  String? originalTitle;
+  String? overview;
+  num? popularity;
+  String? posterPath;
+  List<ProductionCompanies?>? productionCompanies;
+  List<ProductionCountries?>? productionCountries;
+  String? releaseDate;
+  int? revenue;
+  int? runtime;
+  List<SpokenLanguages?>? spokenLanguages;
+  String? status;
+  String? tagline;
+  String? title;
+  bool? video;
+  num? voteAverage;
+  num? voteCount;
+  Credits? credits;
 
-  Movie({
-    required this.poster,
-    required this.backdrop,
-    required this.title,
-    required this.id,
-    required this.year,
-    required this.numOfRatings,
-    required this.criticsReview,
-    required this.metascoreRating,
-    required this.rating,
-    required this.genra,
-    required this.plot,
-    required this.cast,
-  });
+  Movie(
+      {this.id,
+      this.adult,
+      this.backdropPath,
+      this.belongsToCollection,
+      this.budget,
+      this.genres,
+      this.homepage,
+      this.imdbId,
+      this.originalLanguage,
+      this.originalTitle,
+      this.overview,
+      this.popularity,
+      this.posterPath,
+      this.productionCompanies,
+      this.productionCountries,
+      this.releaseDate,
+      this.revenue,
+      this.runtime,
+      this.spokenLanguages,
+      this.status,
+      this.tagline,
+      this.title,
+      this.video,
+      this.voteAverage,
+      this.voteCount,
+      this.credits});
+
+  Movie.fromJson(Map<String, dynamic> json) {
+    adult = json['adult'];
+    backdropPath = json['backdrop_path'];
+    belongsToCollection = BelongsToCollection.belongsToCollectionNullable(
+        json['belongs_to_collection']);
+    budget = json['budget'];
+    if (json['genres'] != null) {
+      genres = [];
+      json['genres'].forEach((v) {
+        genres?.add(new Genres.fromJson(v));
+      });
+    }
+    homepage = json['homepage'];
+    id = json['id'];
+    imdbId = json['imdb_id'];
+    originalLanguage = json['original_language'];
+    originalTitle = json['original_title'];
+    overview = json['overview'];
+    popularity = json['popularity'];
+    posterPath = json['poster_path'];
+    if (json['production_companies'] != null) {
+      productionCompanies = [];
+      json['production_companies'].forEach((v) {
+        productionCompanies?.add(new ProductionCompanies.fromJson(v));
+      });
+    }
+    if (json['production_countries'] != null) {
+      productionCountries = [];
+      json['production_countries'].forEach((v) {
+        productionCountries?.add(new ProductionCountries.fromJson(v));
+      });
+    }
+    releaseDate = json['release_date'];
+    revenue = json['revenue'];
+    runtime = json['runtime'];
+    if (json['spoken_languages'] != null) {
+      spokenLanguages = [];
+      json['spoken_languages'].forEach((v) {
+        spokenLanguages?.add(new SpokenLanguages.fromJson(v));
+      });
+    }
+    status = json['status'];
+    tagline = json['tagline'];
+    title = json['title'];
+    video = json['video'];
+    voteAverage = json['vote_average'];
+    voteCount = json['vote_count'];
+    if (json['credits'] != null) {
+      credits = new Credits.fromJson(json['credits']);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['adult'] = this.adult;
+    data['backdrop_path'] = this.backdropPath;
+    data['belongs_to_collection'] = this.belongsToCollection;
+    data['budget'] = this.budget;
+    if (this.genres != null) {
+      data['genres'] = this.genres?.map((v) => v?.toJson()).toList();
+    }
+    data['homepage'] = this.homepage;
+    data['id'] = this.id;
+    data['imdb_id'] = this.imdbId;
+    data['original_language'] = this.originalLanguage;
+    data['original_title'] = this.originalTitle;
+    data['overview'] = this.overview;
+    data['popularity'] = this.popularity;
+    data['poster_path'] = this.posterPath;
+    if (this.productionCompanies != null) {
+      data['production_companies'] =
+          this.productionCompanies?.map((v) => v?.toJson()).toList();
+    }
+    if (this.productionCountries != null) {
+      data['production_countries'] =
+          this.productionCountries?.map((v) => v?.toJson()).toList();
+    }
+    data['release_date'] = this.releaseDate;
+    data['revenue'] = this.revenue;
+    data['runtime'] = this.runtime;
+    if (this.spokenLanguages != null) {
+      data['spoken_languages'] =
+          this.spokenLanguages?.map((v) => v?.toJson()).toList();
+    }
+    data['status'] = this.status;
+    data['tagline'] = this.tagline;
+    data['title'] = this.title;
+    data['video'] = this.video;
+    data['vote_average'] = this.voteAverage;
+    data['vote_count'] = this.voteCount;
+    if (this.credits != null) {
+      data['credits'] = this.credits?.toJson();
+    }
+    return data;
+  }
 }
-
-// our demo data movie data
-List<Movie> movies = [
-  Movie(
-    id: 1,
-    title: "Bloodshot",
-    year: 2020,
-    poster: "assets/images/poster_1.jpg",
-    backdrop: "assets/images/backdrop_1.jpg",
-    numOfRatings: 150212,
-    rating: 7.3,
-    criticsReview: 50,
-    metascoreRating: 76,
-    genra: ["Action", "Drama"],
-    plot: plotText,
-    cast: [
-      {
-        "orginalName": "James Mangold",
-        "movieName": "Director",
-        "image": "assets/images/actor_1.png",
-      },
-      {
-        "orginalName": "Matt Damon",
-        "movieName": "Carroll",
-        "image": "assets/images/actor_2.png",
-      },
-      {
-        "orginalName": "Christian Bale",
-        "movieName": "Ken Miles",
-        "image": "assets/images/actor_3.png",
-      },
-      {
-        "orginalName": "Caitriona Balfe",
-        "movieName": "Mollie",
-        "image": "assets/images/actor_4.png",
-      },
-    ],
-  ),
-  Movie(
-    id: 2,
-    title: "Ford v Ferrari ",
-    year: 2019,
-    poster: "assets/images/poster_2.jpg",
-    backdrop: "assets/images/backdrop_2.jpg",
-    numOfRatings: 150212,
-    rating: 8.2,
-    criticsReview: 50,
-    metascoreRating: 76,
-    genra: ["Action", "Biography", "Drama"],
-    plot: plotText,
-    cast: [
-      {
-        "orginalName": "James Mangold",
-        "movieName": "Director",
-        "image": "assets/images/actor_1.png",
-      },
-      {
-        "orginalName": "Matt Damon",
-        "movieName": "Carroll",
-        "image": "assets/images/actor_2.png",
-      },
-      {
-        "orginalName": "Christian Bale",
-        "movieName": "Ken Miles",
-        "image": "assets/images/actor_3.png",
-      },
-      {
-        "orginalName": "Caitriona Balfe",
-        "movieName": "Mollie",
-        "image": "assets/images/actor_4.png",
-      },
-    ],
-  ),
-  Movie(
-    id: 1,
-    title: "Onward",
-    year: 2020,
-    poster: "assets/images/poster_3.jpg",
-    backdrop: "assets/images/backdrop_3.jpg",
-    numOfRatings: 150212,
-    rating: 7.6,
-    criticsReview: 50,
-    metascoreRating: 79,
-    genra: ["Action", "Drama"],
-    plot: plotText,
-    cast: [
-      {
-        "orginalName": "James Mangold",
-        "movieName": "Director",
-        "image": "assets/images/actor_1.png",
-      },
-      {
-        "orginalName": "Matt Damon",
-        "movieName": "Carroll",
-        "image": "assets/images/actor_2.png",
-      },
-      {
-        "orginalName": "Christian Bale",
-        "movieName": "Ken Miles",
-        "image": "assets/images/actor_3.png",
-      },
-      {
-        "orginalName": "Caitriona Balfe",
-        "movieName": "Mollie",
-        "image": "assets/images/actor_4.png",
-      },
-    ],
-  ),
-];
-
-String plotText =
-    "American car designer Carroll Shelby and driver Kn Miles battle corporate interference and the laws of physics to build a revolutionary race car for Ford in order.";

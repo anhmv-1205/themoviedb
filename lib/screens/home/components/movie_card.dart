@@ -1,6 +1,8 @@
 import 'package:animations/animations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:themoviedb/data/network/constants/end_points.dart';
 import 'package:themoviedb/models/movie.dart';
 import 'package:themoviedb/screens/details/detail_screen.dart';
 
@@ -22,19 +24,31 @@ class MovieCard extends StatelessWidget {
         closedElevation: 0,
         openElevation: 0,
         openBuilder: (context, action) => DetailScreen(
-          movie: movie,
+          movieId: movie.id ?? 0,
         ),
         closedBuilder: (context, action) => Column(
           children: [
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage(movie.poster),
+              child: AspectRatio(
+                aspectRatio: 0.7,
+                child: CachedNetworkImage(
+                  imageUrl: Endpoint.baseImageW300 + movie.posterPath!,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                        // colorFilter:
+                        //     ColorFilter.mode(Colors.red, BlendMode.colorBurn),
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: [kDefaultShadow],
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [kDefaultShadow],
+                  placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
             ),
@@ -47,9 +61,11 @@ class MovieCard extends StatelessWidget {
               ),
               child: Text(
                 '${movie.title}',
-                style: Theme.of(context).textTheme.headline5!.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5!
+                    .copyWith(fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
               ),
             ),
             Row(
@@ -62,7 +78,7 @@ class MovieCard extends StatelessWidget {
                 SizedBox(
                   width: kDefaultPadding / 2,
                 ),
-                Text('${movie.rating}'),
+                Text('${movie.voteAverage}'),
               ],
             )
           ],
